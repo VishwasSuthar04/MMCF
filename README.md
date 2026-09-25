@@ -1,148 +1,300 @@
-# MM Consultancy Solutions (MMCS) — Web Platform
+# MM Consultancy Solutions — Web Platform
 
-A PHP/MySQL content management system for MM Consultancy Solutions (Private) Limited, a Tharparkar-based consultancy firm serving NGOs and INGOs in MEAL systems, research, capacity building, and digital solutions.
+A PHP/MySQL content management platform for **MM Consultancy Solutions (Private)
+Limited**, a Tharparkar-based consultancy serving NGOs and INGOs with MEAL
+systems, research, capacity building, proposal writing, and field documentation.
+
+Public marketing site plus a password-protected admin panel that manages every
+piece of content on it — no database edits required for day-to-day changes.
 
 **Design & Development:** Vishwas Suthar
 
 ---
 
-## Tech Stack
+## Contents
 
-- **Backend:** PHP 8.x, MySQL 8.x
-- **Frontend:** Bootstrap 5.3, Bootstrap Icons, Google Fonts (Inter + Outfit)
-- **Server:** Apache (XAMPP)
+- [Features](#features)
+- [Tech stack](#tech-stack)
+- [Quick start](#quick-start)
+- [Creating the admin account](#creating-the-admin-account)
+- [Project structure](#project-structure)
+- [Configuration](#configuration)
+- [Security](#security)
+- [Operations](#operations)
+- [Documentation](#documentation)
+- [License](#license)
 
-## Project Structure
+---
 
-```
-MMCF/
-├── admin/              # Admin panel (CRUD for all content types)
-│   ├── admin_header.php  # Layout: sidebar nav, top bar, auth gate
-│   ├── admin_footer.php  # Layout: closes wrapper, includes JS
-│   ├── login.php         # Admin authentication
-│   ├── dashboard.php     # Stats overview, logout handler
-│   ├── services.php      # Manage service offerings
-│   ├── team.php          # Manage expert/staff profiles
-│   ├── portfolio.php     # Manage project showcase entries
-│   ├── blog.php          # Manage blog posts & PDF resources
-│   ├── testimonials.php  # Manage client testimonials
-│   ├── opportunities.php # Manage jobs/volunteer/intern postings
-│   ├── inquiries.php     # Contact form submissions inbox
-│   ├── quotes.php        # Service quote requests inbox
-│   └── settings.php      # Site config + admin password change
-├── includes/
-│   ├── db.php            # PDO database connection
-│   ├── functions.php     # Utility: escape(), flash(), upload_file(), CSRF
-│   ├── auth.php          # Auth gate + session idle timeout
-│   ├── header.php        # Public site <head> + navbar
-│   └── footer.php        # Public site footer
-├── public/              # Public-facing pages
-│   ├── index.php         # Homepage
-│   ├── about.php         # Company profile
-│   ├── services.php      # Service listings
-│   ├── portfolio.php     # Project portfolio
-│   ├── team.php          # Expert directory
-│   ├── get-involved.php  # Career/opportunity listings
-│   ├── apply.php         # Application form (with resume upload)
-│   ├── blog.php          # Blog & resource library
-│   ├── contact.php       # Contact form + office details
-│   ├── inquiry.php       # Quote request form
-│   └── health.php        # JSON health-check endpoint
-├── assets/
-│   ├── css/style.css     # Custom styles
-│   └── js/main.js        # Client-side scripts
-├── scripts/
-│   ├── setup_check.php   # Pre-delivery configuration checker
-│   └── backup.bat        # Windows scheduled backup script (DB + uploads)
-├── uploads/              # User-uploaded images & PDFs
-├── config.php            # Database, SMTP, session, dev mode config
-├── schema.sql            # Database schema + seed data
-├── .env.example          # Environment config template
-├── .gitignore            # Git ignore rules
-├── robots.txt            # Search engine crawl rules
-├── favicon.xml           # SVG favicon
-├── favicon.ico           # Fallback favicon
-├── ADMIN_GUIDE.md        # Admin panel user guide
-└── README.md
+## Features
+
+**Public site** — home, about, services (with per-service detail pages),
+portfolio, expert directory, blog & resource library with PDF downloads,
+opportunities board, job application form with resume upload, contact form,
+and a quote-request form.
+
+**Admin panel** — dashboard with content statistics, plus CRUD screens for
+services, team members, projects, blog posts, testimonials, opportunities,
+partners, the organisation chart, site settings, and read-only inboxes for
+contact inquiries and quote requests.
+
+**Platform**
+
+- Single-admin model with a shared password policy across every entry point
+- JSON health-check endpoint for monitoring
+- Pre-delivery configuration checker
+- Scheduled backup script (database + uploads)
+- No build step, no framework, no package manager — plain PHP 8
+
+## Tech stack
+
+| Layer | Choice |
+|---|---|
+| Backend | PHP 8.x, PDO/MySQL, vanilla procedural PHP |
+| Database | MySQL 8.x (InnoDB, `utf8mb4`) |
+| Frontend | Bootstrap 5.3.2, Bootstrap Icons 1.11.2 (CDN) |
+| Fonts | Inter + Outfit (Google Fonts) |
+| Server | Apache with `.htaccess` (developed on XAMPP) |
+
+## Quick start
+
+**1. Get the files** into your web root:
+
+```bash
+git clone https://github.com/VishwasSuthar04/MMCF.git
 ```
 
-## Installation
+**2. Create the database** (12 tables, no admin account is seeded):
 
-1. **Clone or copy** files into your web root (e.g. `htdocs/MMCF/`).
+```bash
+mysql -u root -p < schema.sql
+```
 
-2. **Create the database** using the provided schema:
-   ```sql
-   mysql -u root -p < schema.sql
-   ```
+**3. Configure `config.php`** — it is git-ignored, so create it from the
+template and fill in your own values:
 
-3. **Configure** `config.php`:
-   - Update `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` for your MySQL setup
-   - Set `DEV_MODE` to `false` on production
-   - Update SMTP credentials if email notifications are needed
+```bash
+cp .env.example config.php
+```
 
-4. **Access the site:**
-   - Public: `http://localhost/MMCF/public/index.php`
-   - Admin:  `http://localhost/MMCF/admin/login.php`
+At minimum set the database credentials and turn off dev mode:
 
-### Admin Credentials
+| Constant | Notes |
+|---|---|
+| `DB_HOST` / `DB_NAME` / `DB_USER` / `DB_PASS` | Your MySQL connection |
+| `DEV_MODE` | Must be `false` in production — controls error display |
+| `MAIL_USER` / `MAIL_PASS` | SMTP app password; placeholder values send nothing |
+| `SITE_URL` | Auto-detected; override only if detection is wrong |
 
-No default password is shipped with this repository. After importing `schema.sql`,
-create the first admin account:
+**4. Create the admin account** (see the next section).
+
+**5. Verify the installation:**
+
+```bash
+php scripts/setup_check.php
+```
+
+It checks dev mode, admin accounts, SMTP, database connectivity, upload
+permissions, the uploads `.htaccess`, HTTPS, PHP version, and required
+extensions. Fix anything marked `FAIL` before going live.
+
+**6. Open the site:**
+
+```
+Public  http://localhost/MMCF/public/index.php
+Admin   http://localhost/MMCF/admin/login.php
+```
+
+## Creating the admin account
+
+No default credential is shipped in this repository — a shared password in a
+public repo would be readable by anyone. Create your own after importing the
+schema:
 
 ```bash
 php scripts/set_admin.php
 ```
 
-The script sets a single admin account, removes any others, and stores only a
-bcrypt hash of the password. Credentials are read from a hidden prompt (or from
-`MMCS_ADMIN_USERNAME` / `MMCS_ADMIN_PASSWORD` for automation), so no password
-ever needs to be written into a file or committed.
+The script enforces a **single-admin** policy (any other account is removed),
+stores only a bcrypt hash, and reads the password from a hidden prompt so it
+never touches a file. For automation, set `MMCS_ADMIN_USERNAME` and
+`MMCS_ADMIN_PASSWORD` and pass `--yes`.
 
-#### Password policy
+| Flag | Effect |
+|---|---|
+| `--yes` | Skip the confirmation prompt (needed for non-interactive runs) |
+| `--keep-others` | Do not delete other admin accounts |
+| `--force` | Apply a password that fails the strength policy (last resort) |
+
+### Password policy
 
 `validate_password_strength()` in `includes/functions.php` is the single source
-of truth, used by both `scripts/set_admin.php` and the Admin → Site Settings →
-Security Gate form, so a password accepted by one is accepted by both:
+of truth, called from both `set_admin.php` and the **Admin → Site Settings →
+Security Gate** form, so the two can never drift apart:
 
 - at least **12 characters**
-- at least **3 of 4** character classes (lowercase, uppercase, number, symbol)
+- at least **3 of 4** character classes — lowercase, uppercase, number, symbol
 - must not contain the username, or the words `mmcs`, `admin`, `password`,
   `tharparkar`, `consultancy`, `welcome`
 
-`scripts/set_admin.php --force` overrides the policy as a last resort.
+## Project structure
 
-## Security Features
+```
+MMCF/
+├── public/              # Public-facing pages (web root entry points)
+│   ├── index.php          # Homepage
+│   ├── about.php          # Company profile
+│   ├── services.php       # Service listings
+│   ├── service-detail.php # Individual service page
+│   ├── portfolio.php      # Project showcase
+│   ├── team.php           # Expert directory
+│   ├── blog.php           # Blog & resource library
+│   ├── get-involved.php   # Opportunity listings
+│   ├── apply.php          # Application form (resume upload)
+│   ├── contact.php        # Contact form + office details
+│   ├── inquiry.php        # Quote request form
+│   └── health.php         # JSON health check
+├── admin/               # Admin panel (auth-gated)
+│   ├── login.php          # Authentication + brute-force rate limiting
+│   ├── dashboard.php      # Statistics overview, logout
+│   ├── services.php       # Manage services
+│   ├── team.php           # Manage experts/staff
+│   ├── portfolio.php      # Manage projects
+│   ├── blog.php           # Manage posts & PDF resources
+│   ├── testimonials.php   # Manage testimonials
+│   ├── opportunities.php  # Manage jobs/volunteer/intern postings
+│   ├── partners.php       # Manage partner organisations
+│   ├── organogram.php     # Manage org chart
+│   ├── inquiries.php      # Contact submissions inbox
+│   ├── quotes.php         # Quote request inbox
+│   ├── settings.php       # Site settings + password change
+│   ├── admin_header.php   # Sidebar, top bar, auth gate
+│   └── admin_footer.php   # Closes wrapper, includes JS
+├── includes/
+│   ├── db.php            # PDO singleton + error handling
+│   ├── functions.php     # escape(), flash(), CSRF, upload_file(), password policy
+│   ├── auth.php          # Auth gate + idle timeout
+│   ├── header.php        # Public <head> + navbar
+│   └── footer.php        # Public footer
+├── assets/
+│   ├── css/style.css     # Custom styles
+│   ├── images/           # Static imagery
+│   └── js/main.js        # Client-side behaviour
+├── scripts/
+│   ├── set_admin.php     # Create/update the single admin account
+│   ├── setup_check.php   # Pre-delivery configuration checker
+│   └── backup.bat        # Scheduled backup (database + uploads, 30-day retention)
+├── uploads/              # User-uploaded files (git-ignored)
+├── docs/                 # Requirements, architecture, design & planning docs
+├── config.php            # Local configuration (git-ignored)
+├── schema.sql            # Schema + seed content
+├── .env.example          # Configuration template
+├── ADMIN_GUIDE.md        # Admin panel user guide
+└── README.md
+```
 
-- **CSRF Protection** — All admin write operations require a session-bound CSRF token
-- **Rate Limiting** — Login brute-force protection (5 attempts / 15 min lockout)
-- **Session Security** — Idle timeout (30 min), session regeneration after login
-- **Password Policy** — Min 6 chars, requires uppercase + lowercase + digit
-- **File Upload** — MIME type + extension whitelist, random filenames, `.htaccess` blocks PHP in uploads/
-- **Error Handling** — No stack traces or DB details exposed to users
-- **XSS Prevention** — All output escaped via `htmlspecialchars()`
-- **SQL Injection** — All queries use PDO prepared statements
-- **Security Headers** — `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`
+### Database tables
 
-## Health Check
+`services` · `projects` · `team_members` · `blog_posts` · `inquiries` ·
+`testimonials` · `admins` · `opportunities` · `applications` · `partners` ·
+`settings` · `organogram`
+
+## Configuration
+
+All runtime configuration lives in `config.php` (git-ignored). `.env.example`
+documents every value. The ones that matter most in production:
+
+| Constant | Default | Purpose |
+|---|---|---|
+| `DEV_MODE` | `false` | When `true`, shows raw errors. Never enable publicly. |
+| `SESSION_TIMEOUT` | `1800` | Idle timeout in seconds (30 minutes). |
+| `MAX_FILE_SIZE` | 5 MB | Upload size ceiling. |
+| `ALLOWED_IMAGE_TYPES` | JPEG/PNG/WebP | MIME whitelist for image uploads. |
+| `ALLOWED_DOC_TYPES` | PDF | MIME whitelist for document uploads. |
+
+## Security
+
+Implemented:
+
+- **SQL injection** — every query uses PDO prepared statements; emulated
+  prepares are disabled
+- **XSS** — all output escaped through `escape()` (`htmlspecialchars` with
+  `ENT_QUOTES`, UTF-8)
+- **CSRF** — session-bound token required on admin writes
+- **Brute force** — login limited to 5 attempts, then a 15-minute lockout
+- **Sessions** — 30-minute idle timeout, `HttpOnly` + `Secure` (on HTTPS)
+  cookies, session ID regenerated on login
+- **Passwords** — bcrypt via `password_hash()`, single shared strength policy
+- **Uploads** — MIME *and* extension whitelists, randomised filenames, and an
+  `.htaccess` that blocks PHP execution inside `uploads/`
+- **Error handling** — production shows generic messages; details go to
+  `error_log` only
+- **Logs** — `admin/logs/.htaccess` denies web access to the failed-login log
+
+Known gaps, stated plainly rather than claimed as features:
+
+- `X-Content-Type-Options` and `X-Frame-Options` are emitted as
+  `<meta http-equiv>` tags. Browsers largely ignore `X-Frame-Options` in meta
+  form — clickjacking protection needs a real response header or a CSP
+  `frame-ancestors` directive.
+- `Referrer-Policy` is specified in the requirements docs but is **not**
+  implemented in code.
+- The seeded testimonials are placeholder names (`John Doe`, `Sarah Jenkins`)
+  and should be replaced before launch.
+
+## Operations
+
+**Health check** — for monitoring or a load balancer:
 
 ```
 GET /public/health.php
 ```
-Returns JSON: `{"status":"ok","checks":{"database":{"status":"ok","latency_ms":2.15}}}`
 
-## Services (Seed Data)
+Returns `200` with `{"status":"ok", ...}` when the database is reachable, or
+`503` with `"status":"degraded"` when it is not:
 
-The platform ships with 9 core service categories:
-1. MEAL Systems Design
-2. Third-Party Monitoring
-3. Baseline & End line Evaluations
-4. Capacity Building & Training
-5. Research & Survey Solutions
-6. Climate Change & Environment
-7. Humanitarian & Emergency Response
-8. Gender & Social Inclusion
-9. Data Analytics & Digital Solutions
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-09-25T21:29:08+05:30",
+  "service": "MMCS Web Platform",
+  "version": "1.0.0",
+  "checks": { "database": { "status": "ok", "latency_ms": 2.15 } }
+}
+```
+
+**Backups** — `scripts/backup.bat` dumps the database and copies `uploads/`,
+pruning anything older than 30 days. Schedule it with Task Scheduler:
+
+```bat
+schtasks /create /tn "MMCS Backup" /tr "D:\xampp\htdocs\MMCF\scripts\backup.bat" /sc daily /st 02:00
+```
+
+Edit the paths at the top of the script first. Backups are written outside the
+web root — keep them off-server too.
+
+## Documentation
+
+| Document | Contents |
+|---|---|
+| [`ADMIN_GUIDE.md`](ADMIN_GUIDE.md) | How to use the admin panel |
+| [`docs/00-Business-Requirements-Document.md`](docs/00-Business-Requirements-Document.md) | Business requirements |
+| [`docs/00-Software-Requirements-Specification.md`](docs/00-Software-Requirements-Specification.md) | SRS, incl. non-functional requirements |
+| [`docs/00-System-Architecture-Design.md`](docs/00-System-Architecture-Design.md) | Architecture |
+| [`docs/00-Database-Design-Document.md`](docs/00-Database-Design-Document.md) | Data model |
+| [`docs/00-UIUX-Wireframe-Specification.md`](docs/00-UIUX-Wireframe-Specification.md) | Wireframes |
+| [`docs/00-Project-Plan-Timeline.md`](docs/00-Project-Plan-Timeline.md) | Project plan |
+| [`docs/01-PRD.md`](docs/01-PRD.md) | Product requirements |
+| [`docs/02-TRD.md`](docs/02-TRD.md) | Technical requirements & risk register |
+| [`docs/03-App-Workflow.md`](docs/03-App-Workflow.md) | Application workflows |
+| [`docs/04-UIUX-Design-Brief.md`](docs/04-UIUX-Design-Brief.md) | UI/UX brief |
+| [`docs/05-Backend-Schema.md`](docs/05-Backend-Schema.md) | Backend/schema reference |
+| [`docs/06-Implementation-Plan.md`](docs/06-Implementation-Plan.md) | Implementation plan |
+| `MMCS_Website_Workflow.pdf` | Workflow diagram |
 
 ## License
 
-Proprietary — MM Consultancy Solutions (Private) Limited
+Proprietary — © MM Consultancy Solutions (Private) Limited. All rights reserved.
+
+No open-source licence is granted. This code is published for portfolio and
+review purposes; contact the author before any reuse.
