@@ -1,0 +1,351 @@
+/* ====================================================================
+   MMCS COMPLETE CUSTOM STYLESHEET
+   ====================================================================
+   Edit this file to change the look and feel of the public-facing site.
+   
+   QUICK REFERENCE:
+   - Brand colour    → --orange-primary  (line 7)   current: #FF5C00
+   - Hover colour    → --orange-hover    (line 8)   current: #cc4a00
+   - Dark navy       → --navy-dark       (line 5)   current: #0f172a
+   - Light navy      → --navy-light      (line 6)   current: #1e293b
+   
+   BOOTSTRAP OVERRIDE CLASSES:
+   .text-orange        — orange text colour
+   .btn-orange         — solid orange button
+   .btn-outline-orange — outlined orange button
+   .bg-orange          — orange background
+   .bg-navy            — navy background
+   .bg-dark-navy       — darker navy background
+==================================================================== */
+
+/* --- Core Custom Design Variables --- */
+:root {
+    --navy-dark: #0f172a;       /* Deep Slate Navy — used for footers, dark sections */
+    --navy-light: #1e293b;      /* Slate Blue — used for secondary dark sections */
+    --orange-primary: #FF5C00;  /* Brand Orange — main accent colour */
+    --orange-hover: #cc4a00;    /* Deep Brand Orange — hover states */
+    --text-dark: #0f172a;       /* Slate Dark — default body text */
+    --text-muted: #64748b;      /* Muted slate text */
+    --gray-bg: #f8fafc;         /* Ultra-light gray — section backgrounds */
+    --gray-border: #e2e8f0;     /* Border gray — cards, dividers */
+    
+    /* Raw RGB values for rgba() transparency usage */
+    --navy-raw: 15, 23, 42;
+    --orange-raw: 255, 92, 0;
+}
+
+/* --- General Resets & Typography --- */
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background-color: #ffffff;
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+.font-outfit {
+    font-family: 'Outfit', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: var(--navy-dark);
+}
+
+/* --- Navbar Fixes --- */
+.navbar-brand {
+    max-width: 70%;
+    white-space: normal;
+    line-height: 1.3;
+}
+
+.navbar .nav-link {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+}
+
+.navbar .btn {
+    display: inline-flex;
+    align-items: center;
+}
+
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+
+.tracking-wide {
+    letter-spacing: 0.05em;
+}
+
+/* --- Brand Backgrounds & Colors --- */
+.bg-navy {
+    background-color: var(--navy-dark) !important;
+}
+
+.bg-dark-navy {
+    background-color: #0b0f19 !important;
+}
+
+.bg-gray-soft {
+    background-color: var(--gray-bg);
+}
+
+.text-orange {
+    color: var(--orange-primary) !important;
+}
+
+.text-gray {
+    color: #cbd5e1 !important;
+}
+
+.text-gray-muted {
+    color: #94a3b8 !important;
+}
+
+/* --- Interactive Components --- */
+.btn-orange {
+    background-color: var(--orange-primary);
+    color: #ffffff;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-orange:hover {
+    background-color: var(--orange-hover);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
+}
+
+.btn-outline-orange {
+    background-color: transparent;
+    color: var(--orange-primary);
+    border: 2px solid var(--orange-primary);
+    transition: all 0.3s ease;
+}
+
+.btn-outline-orange:hover {
+    background-color: var(--orange-primary);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.25);
+}
+
+/* Social Media Icons Footer */
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-icon:hover {
+    background-color: var(--orange-primary);
+    color: #ffffff;
+    transform: translateY(-3px);
+}
+
+.hover-orange:hover {
+    color: var(--orange-primary) !important;
+}
+
+/* --- Hero Banner Styles --- */
+.hero-banner {
+    position: relative;
+    background: linear-gradient(135deg, var(--navy-dark) 0%, #0b0f19 100%);
+    color: #ffffff;
+    padding: 140px 0 120px 0;
+    overflow: hidden;
+}
+
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(234, 88, 12, 0.08) 0%, rgba(234, 88, 12, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-subtitle {
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange-primary);
+    font-weight: 700;
+}
+
+.hero-title {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+}
+
+@media (max-width: 767.98px) {
+    .hero-title {
+        font-size: 36px;
+    }
+    .hero-banner {
+        padding: 100px 0 80px 0;
+    }
+}
+
+/* --- Premium Grid & Cards --- */
+.premium-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-border);
+    border-radius: 16px;
+    padding: 30px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01), 0 2px 4px -1px rgba(0,0,0,0.005);
+}
+
+.premium-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    border-color: rgba(234, 88, 12, 0.15);
+}
+
+.premium-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background-color: rgba(234, 88, 12, 0.08);
+    color: var(--orange-primary);
+    font-size: 24px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+
+.premium-card:hover .premium-card-icon {
+    background-color: var(--orange-primary);
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+/* --- Project Portfolio Filters --- */
+.portfolio-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.filter-btn {
+    border: 1px solid var(--gray-border);
+    background-color: #ffffff;
+    color: var(--navy-dark);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background-color: var(--navy-dark);
+    border-color: var(--navy-dark);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* --- Stats Counter Widget --- */
+.stats-badge-card {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stats-number {
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--orange-primary);
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+/* --- Form Improvements --- */
+.form-input-premium {
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    transition: all 0.3s ease;
+}
+
+.form-input-premium:focus {
+    border-color: var(--orange-primary);
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
+}
+
+/* --- Service Approach Image --- */
+.service-approach-image {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* --- Testimonials Styling --- */
+.testimonial-bubble {
+    position: relative;
+    background-color: #ffffff;
+    border: 1px solid var(--gray-border);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);
+}
+
+.testimonial-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 40px;
+    width: 24px;
+    height: 24px;
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--gray-border);
+    border-right: 1px solid var(--gray-border);
+    transform: rotate(45deg);
+}
+
+/* --- Footer Navigation link styling --- */
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links li a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.footer-links li a:hover {
+    color: var(--orange-primary);
+    padding-left: 3px;
+}
+
+.footer-contact li {
+    font-size: 14px;
+}

@@ -1,0 +1,32 @@
+# Environment & secrets
+config.php
+.env
+scripts/.flagged_admin_password
+
+# Database dumps / backups
+*.sql.bak
+/backups/
+
+# Uploaded files (user content)
+uploads/*.jpg
+uploads/*.jpeg
+uploads/*.png
+uploads/*.webp
+uploads/*.pdf
+uploads/team/
+uploads/projects/
+uploads/blog/
+uploads/applications/
+
+# Admin logs
+admin/logs/*.log
+admin/logs/*.tmp
+
+# OS files
+Thumbs.db
+.DS_Store
+*.swp
+
+# IDE
+.vscode/
+.idea/

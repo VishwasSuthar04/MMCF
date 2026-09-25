@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /public/
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /uploads/
+Disallow: /config.php

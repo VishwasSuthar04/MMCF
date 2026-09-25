@@ -1,0 +1,14 @@
+# Deny direct access to all files in uploads directory by script execution
+# Only allow file viewing (download)
+
+# Disable PHP execution
+<FilesMatch "\.(php|phtml|php3|php4|php5|phps|pl|py|jsp|asp|htm|html|shtml|sh|cgi)$">
+    Require all denied
+</FilesMatch>
+
+# Allow access to images and PDFs
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|jfif|pdf)$">
+    Require all granted
+</FilesMatch>
+
+Options -Indexes
