@@ -70,14 +70,12 @@ git clone https://github.com/VishwasSuthar04/MMCF.git
 mysql -u root -p < schema.sql
 ```
 
-**3. Configure `config.php`** — it is git-ignored, so create it from the
+**3. Configure the app.** `config.php` is git-ignored, so create it from the PHP
 template and fill in your own values:
 
 ```bash
-cp .env.example config.php
+cp config.example.php config.php
 ```
-
-At minimum set the database credentials and turn off dev mode:
 
 | Constant | Notes |
 |---|---|
@@ -85,6 +83,11 @@ At minimum set the database credentials and turn off dev mode:
 | `DEV_MODE` | Must be `false` in production — controls error display |
 | `MAIL_USER` / `MAIL_PASS` | SMTP app password; placeholder values send nothing |
 | `SITE_URL` | Auto-detected; override only if detection is wrong |
+
+> `.env.example` is a **reference only** — it lists every setting and its default
+> for reference. It is not loaded by the code, and copying it to `config.php`
+> will not work: its `KEY=value` format is not valid PHP, so no constant would
+> be defined. Always start from `config.example.php`.
 
 **4. Create the admin account** (see the next section).
 

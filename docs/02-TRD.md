@@ -204,13 +204,24 @@ Response to browser
 
 ### 5.3 HTTP Security Headers
 
-Set in `includes/header.php:29-31` and `admin/admin_header.php:28-30`:
+Sent as real HTTP response headers by `send_security_headers()` in
+`includes/functions.php`, called from all four entry points: the public
+layout (`includes/header.php`), the admin layout (`admin/admin_header.php`),
+the standalone login screen (`admin/login.php`), and the quote print view
+(`admin/quotes.php`):
 
 ```
 X-Content-Type-Options: nosniff
 X-Frame-Options: SAMEORIGIN
 Referrer-Policy: strict-origin-when-cross-origin
+Content-Security-Policy: frame-ancestors 'self'
 ```
+
+> These were previously only `<meta http-equiv>` tags, which browsers ignore
+> for `X-Frame-Options` and `X-Content-Type-Options`, so that protection was
+> not actually in effect. Only `frame-ancestors` is set in the CSP: the pages
+> rely on inline styles and scripts, so a full `script-src`/`style-src` policy
+> would require nonces or hashes first.
 
 ### 5.4 Upload Security
 

@@ -388,7 +388,7 @@ scrollY > 50:   Semi-transparent navy, blur(8px), shadow, padding 12px
 | Custom CSS | `assets/css/style.css` (351 lines) |
 | Client JS | `assets/js/main.js` (72 lines) |
 | Admin styles | Inline in `admin/admin_header.php:45-241` |
-| Logo | `uploads/IMMCS_logo.png` |
+| Logo | `assets/images/mmcs-logo.png` (via the `site_logo` setting) |
 | Favicon | `favicon.xml` + `favicon.ico` |
 | Default avatar | `assets/images/default-avatar.png` |
 | Placeholder project | `assets/images/placeholder-project.jpg` |

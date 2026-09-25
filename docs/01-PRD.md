@@ -205,7 +205,7 @@ MMCS is a PHP/MySQL content management system serving as the public-facing websi
 **Key business rules:**
 - Uses `INSERT ... ON DUPLICATE KEY UPDATE` to upsert settings
 - Settings are cached per-request via static variable in `get_setting()`
-- Password change enforces: min 6 chars, uppercase + lowercase + number
+- Password change enforces: min 12 chars, at least 3 of 4 character classes, no username or site words (shared `validate_password_strength()` policy)
 - Password change requires current password verification
 
 (Confirmed in code — `admin/settings.php:30-56,61-97`)

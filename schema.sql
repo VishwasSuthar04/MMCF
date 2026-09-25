@@ -170,7 +170,8 @@ CREATE TABLE IF NOT EXISTS `organogram` (
 
 -- Seed Default Settings
 INSERT INTO `settings` (`key`, `value`) VALUES
-('site_logo', 'assets/images/logo.png'),
+ ('site_logo', 'assets/images/mmcs-logo.png'),
+
 ('company_name', 'MM Consultancy Solutions (Private) Limited'),
 ('phone', '0334-2656314'),
 ('email', 'mmconsultancysolutions@gmail.com'),
@@ -218,10 +219,14 @@ INSERT INTO `services` (`title`, `description`, `icon_path`, `sort_order`) VALUE
 ('Field Documentation & Visibility', 'End-to-end visual documentation including field photography and videography, success and human interest stories, documentary production, branding and communication materials.', 'bi-camera', 8),
 ('Independent Evaluations & Assessments', 'End-of-project evaluations and rapid assessments as standalone engagements or as part of EEPS retainer. Credible, donor-ready evidence products for any program scale.', 'bi-clipboard-data', 9);
 
--- Seed Initial Testimonials
+-- Seed Placeholder Testimonials
+-- These are PLACEHOLDERS with invented names and quotes, seeded unapproved
+-- (is_approved = 0) so they never render on the public homepage carousel,
+-- which only shows is_approved = 1. Replace them with real, attributable
+-- client quotes and set is_approved = 1 from Admin -> Testimonials.
 INSERT INTO `testimonials` (`client_name`, `org`, `quote`, `photo`, `is_approved`) VALUES
-('John Doe', 'Global Development Initiative', 'MMCS delivered exceptional MEAL reporting for our climate resilience program. Highly recommended!', 'client1.jpg', 1),
-('Sarah Jenkins', 'WASH Alliance', 'Their proposal writing team helped us secure a major funding grant. Very professional and timely.', 'client2.jpg', 1);
+('John Doe', 'Global Development Initiative', 'MMCS delivered exceptional MEAL reporting for our climate resilience program. Highly recommended!', 'client1.jpg', 0),
+('Sarah Jenkins', 'WASH Alliance', 'Their proposal writing team helped us secure a major funding grant. Very professional and timely.', 'client2.jpg', 0);
 
 -- Seed Initial Projects
 INSERT INTO `projects` (`title`, `client`, `sector`, `location`, `year`, `description`, `images`) VALUES

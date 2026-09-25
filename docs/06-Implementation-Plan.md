@@ -120,7 +120,7 @@
 
 | Issue | Severity | Location | Fix |
 |-------|----------|----------|-----|
-| Default admin credentials in seed | Critical | `schema.sql:189-191` | Change password after first login |
+| ~~Default admin credentials in seed~~ RESOLVED | Critical | `schema.sql` `ADMIN ACCOUNT` block | No default password is seeded or documented. The first admin is created with `php scripts/set_admin.php`, which enforces the shared strength policy. `.flagged_admin_password` lets `setup_check.php` warn if a known-weak password is in use |
 | SMTP not configured | Critical | `config.php:62-63` | Set real SMTP credentials |
 | DB credentials default (root/empty) | Critical | `config.php:42-43` | Create dedicated MySQL user |
 | No HTTPS enforcement | Critical | `config.php` | Add redirect + secure cookie enforcement |
@@ -276,9 +276,12 @@ MMCF/
 │       ├── service approach.jpg
 │       └── why partner us.jpg
 │
+├── assets/
+│   ├── images/
+│   │   ├── mmcs-logo.png                 # Company logo (navbar, via site_logo setting)
+│   │   └── logo.png                      # Fallback mark
 ├── uploads/
 │   ├── .htaccess                       # Blocks PHP execution
-│   ├── IMMCS_logo.png                  # Company logo
 │   ├── applications/                   # Resume PDFs
 │   ├── blog/                           # Blog PDF attachments
 │   ├── organogram/                     # Org chart photos

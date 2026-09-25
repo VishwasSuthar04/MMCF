@@ -282,7 +282,7 @@ Admin clicks "Site Settings" in sidebar
 │   └── Public site reflects changes on next page load
 └── Right Panel: Security Gate (Password Change)
     ├── Enter current password
-    ├── Enter new password (min 6 chars, uppercase + lowercase + number)
+    ├── Enter new password (min 12 chars, 3 of 4 character classes, no username or site words)
     ├── Confirm new password
     ├── Click "Change Password"
     │   ├── Current password verified via password_verify()

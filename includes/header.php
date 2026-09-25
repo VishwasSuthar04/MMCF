@@ -21,6 +21,18 @@ $company_name = get_setting('company_name');
 // Short brand for navbar to prevent overflow with long company name
 $nav_brand = 'MM Consultancy Solutions';
 
+// Navbar logo comes from the `site_logo` setting so it can be changed from
+// Admin -> Site Settings. Falls back to the tracked default in assets/;
+// uploads/ is git-ignored, so a path under uploads/ would break on a fresh
+// clone. onerror in the markup covers a setting that points at a missing file.
+$nav_logo = trim((string) get_setting('site_logo'));
+if ($nav_logo === '') {
+    $nav_logo = 'assets/images/logo.png';
+}
+$nav_logo_url = (str_starts_with($nav_logo, 'http') || str_starts_with($nav_logo, '//'))
+    ? $nav_logo
+    : SITE_URL . ltrim($nav_logo, '/');
+
 send_security_headers();
 ?>
 <!DOCTYPE html>
@@ -59,7 +71,7 @@ send_security_headers();
         <div class="container">
             <!-- Brand / Home link -->
             <a class="navbar-brand d-flex align-items-center" href="<?php echo SITE_URL; ?>public/index.php">
-                <img src="<?php echo SITE_URL; ?>uploads/IMMCS_logo.png" alt="MMCS Logo" height="60" class="me-2">
+                <img src="<?php echo escape($nav_logo_url); ?>" alt="MMCS Logo" height="60" class="me-2" onerror="this.onerror=null;this.src='<?php echo SITE_URL; ?>assets/images/logo.png'">
                 <span class="font-outfit fw-bold tracking-tight"><?php echo escape($nav_brand); ?></span>
             </a>
             

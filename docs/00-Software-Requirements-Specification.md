@@ -331,7 +331,7 @@ The MMCS Web Platform is a standalone, self-hosted PHP/MySQL web application. It
 | FR-SET-02 | Settings changes shall be persisted using an upsert mechanism (insert or update) | Must Have |
 | FR-SET-03 | Admin shall be able to change the admin password | Must Have |
 | FR-SET-04 | Password change shall require the current password for verification | Must Have |
-| FR-SET-05 | New passwords shall enforce: minimum 6 characters, at least one uppercase letter, one lowercase letter, and one number | Must Have |
+| FR-SET-05 | New passwords shall enforce: minimum 12 characters, at least 3 of 4 character classes (lowercase, uppercase, number, symbol), and must not contain the username or the words mmcs/admin/password/tharparkar/consultancy/welcome. Enforced by `validate_password_strength()` in `includes/functions.php`, shared by `scripts/set_admin.php` and the Security Gate form | Must Have |
 
 ---
 
