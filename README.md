@@ -87,15 +87,29 @@ MMCF/
 ### Admin Credentials
 
 No default password is shipped with this repository. After importing `schema.sql`,
-create the first admin using the `ADMIN ACCOUNT` instructions in that file:
+create the first admin account:
 
 ```bash
-php -r "echo password_hash('YOUR_PASSWORD_HERE', PASSWORD_DEFAULT), PHP_EOL;"
+php scripts/set_admin.php
 ```
 
-- **Username:** `MahaDev` (or any username you choose)
-- **Password:** one you set yourself — this account has full control over the site
-- **⚠️ Change it immediately after first login** via Admin → Site Settings → Security Gate
+The script sets a single admin account, removes any others, and stores only a
+bcrypt hash of the password. Credentials are read from a hidden prompt (or from
+`MMCS_ADMIN_USERNAME` / `MMCS_ADMIN_PASSWORD` for automation), so no password
+ever needs to be written into a file or committed.
+
+#### Password policy
+
+`validate_password_strength()` in `includes/functions.php` is the single source
+of truth, used by both `scripts/set_admin.php` and the Admin → Site Settings →
+Security Gate form, so a password accepted by one is accepted by both:
+
+- at least **12 characters**
+- at least **3 of 4** character classes (lowercase, uppercase, number, symbol)
+- must not contain the username, or the words `mmcs`, `admin`, `password`,
+  `tharparkar`, `consultancy`, `welcome`
+
+`scripts/set_admin.php --force` overrides the policy as a last resort.
 
 ## Security Features
 

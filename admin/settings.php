@@ -68,10 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
         $error = 'All password fields are required.';
     } elseif ($new_pass !== $new_pass_confirm) {
         $error = 'New passwords do not match.';
-    } elseif (strlen($new_pass) < 6) {
-        $error = 'New password must be at least 6 characters long.';
-    } elseif (!preg_match('/[A-Z]/', $new_pass) || !preg_match('/[a-z]/', $new_pass) || !preg_match('/[0-9]/', $new_pass)) {
-        $error = 'New password must contain uppercase, lowercase, and a number.';
+    } elseif (($strength_error = validate_password_strength($new_pass, $_SESSION['admin_username'] ?? '')) !== null) {
+        $error = $strength_error;
     } else {
         try {
             $stmt = $pdo->prepare("SELECT `password_hash`, `id` FROM `admins` WHERE `id` = ?");

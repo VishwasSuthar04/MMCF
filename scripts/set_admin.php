@@ -20,6 +20,7 @@
  * Flags:
  *   --yes           Skip the confirmation prompt (required for non-interactive use)
  *   --keep-others   Do not delete other admin accounts
+ *   --force         Apply a password that fails the strength policy (last resort)
  *
  * DESIGN & DEVELOPMENT: Vishwas Suthar
  */
@@ -33,13 +34,15 @@ if (php_sapi_name() !== 'cli') {
 }
 
 require_once dirname(__DIR__) . '/includes/db.php';
+require_once dirname(__DIR__) . '/includes/functions.php';
 
 // ---------------------------------------------------
 //  ARGUMENTS
 // ---------------------------------------------------
-$opts = getopt('', ['yes', 'keep-others']);
-$assume_yes    = array_key_exists('yes', $opts);
-$keep_others   = array_key_exists('keep-others', $opts);
+$opts = getopt('', ['yes', 'keep-others', 'force']);
+$assume_yes  = array_key_exists('yes', $opts);
+$keep_others = array_key_exists('keep-others', $opts);
+$force       = array_key_exists('force', $opts);
 
 // ---------------------------------------------------
 //  PROMPT HELPERS
@@ -121,13 +124,18 @@ if ($errors) {
 }
 
 // ---------------------------------------------------
-//  STRENGTH WARNING (non-blocking, but must be acknowledged)
+//  STRENGTH POLICY (shared with admin/settings.php)
 // ---------------------------------------------------
-$weak = strlen($password) < 12;
-if ($weak) {
-    fwrite(STDOUT, PHP_EOL . 'WARNING: that password is short. Anything under 12 characters is' . PHP_EOL
-        . '         trivially brute-forced. Use a longer passphrase for any site' . PHP_EOL
-        . '         reachable from the internet.' . PHP_EOL);
+$strength_error = validate_password_strength($password, $username);
+
+if ($strength_error !== null) {
+    fwrite(STDERR, 'Password rejected:' . PHP_EOL . '  ' . $strength_error . PHP_EOL);
+    if (!$force) {
+        fwrite(STDERR, PHP_EOL . 'Choose a stronger password, or pass --force to override' . PHP_EOL
+            . '(last resort only: a weak password here is reachable by anyone who finds it).' . PHP_EOL);
+        exit(1);
+    }
+    fwrite(STDERR, PHP_EOL . 'WARNING: --force given, applying a password that fails policy.' . PHP_EOL);
 }
 
 // ---------------------------------------------------

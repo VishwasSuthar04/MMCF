@@ -145,6 +145,50 @@ function require_csrf_token() {
 }
 
 // ---------------------------------------------------------------
+//  validate_password_strength()
+//  Single source of truth for admin password policy. Used by both
+//  admin/settings.php (Security Gate) and scripts/set_admin.php so a
+//  password accepted by one path cannot be rejected by the other.
+//
+//  Returns an error string on failure, or NULL when the password passes.
+//
+//  Policy:
+//    - at least 12 characters
+//    - at least 3 of the 4 character classes (lower, upper, digit, symbol)
+//    - must not contain the username or obvious site words
+// ---------------------------------------------------------------
+function validate_password_strength($password, $username = '') {
+    $errors = [];
+
+    if (strlen($password) < 12) {
+        $errors[] = 'Password must be at least 12 characters long.';
+    }
+
+    $classes = 0;
+    foreach (['/[a-z]/', '/[A-Z]/', '/[0-9]/', '/[^a-zA-Z0-9]/'] as $re) {
+        if (preg_match($re, $password)) {
+            $classes++;
+        }
+    }
+    if ($classes < 3) {
+        $errors[] = 'Password must use at least 3 of: lowercase, uppercase, number, symbol.';
+    }
+
+    $haystack = strtolower($password);
+    if ($username !== '' && $username !== null && str_contains($haystack, strtolower(explode('@', $username)[0]))) {
+        $errors[] = 'Password must not contain your username.';
+    }
+    foreach (['mmcs', 'admin', 'password', 'tharparkar', 'consultancy', 'welcome'] as $word) {
+        if (str_contains($haystack, $word)) {
+            $errors[] = 'Password must not contain the word "' . $word . '".';
+            break;
+        }
+    }
+
+    return $errors ? implode(' ', $errors) : null;
+}
+
+// ---------------------------------------------------------------
 //  upload_file()
 //  Securely upload an image or PDF to the /uploads/ folder.
 //
