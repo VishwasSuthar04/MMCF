@@ -106,6 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($error)) {
         }
     }
 }
+send_security_headers();
 ?>
 <!DOCTYPE html>
 <html lang="en">

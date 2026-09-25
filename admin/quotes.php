@@ -34,7 +34,9 @@ if ($action === 'print' && $view_id > 0) {
     } catch (PDOException $e) {
         die("Failed to load quote request details.");
     }
-?>
+
+    send_security_headers();
+    ?>
     <!DOCTYPE html>
     <html lang="en">
     <head>

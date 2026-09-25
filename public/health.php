@@ -11,7 +11,8 @@
 
 header('Content-Type: application/json');
 header('Cache-Control: no-store, no-cache, must-revalidate');
-header('X-Content-Type-Options: nosniff');
+require_once dirname(__DIR__) . '/includes/functions.php';
+send_security_headers();
 
 require_once dirname(__DIR__) . '/config.php';
 require_once dirname(__DIR__) . '/includes/db.php';

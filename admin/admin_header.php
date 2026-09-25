@@ -19,15 +19,14 @@ require_once dirname(__DIR__) . '/includes/auth.php';
 
 $admin_page = basename($_SERVER['PHP_SELF']);  // Used to highlight active sidebar item
 $company_name = get_setting('company_name');
+
+send_security_headers();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <title>Admin Dashboard | <?php echo escape($company_name); ?></title>
     
     <!-- Favicon -->

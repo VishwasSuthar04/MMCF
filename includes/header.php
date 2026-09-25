@@ -20,15 +20,14 @@ $current_page = basename($_SERVER['PHP_SELF']); // Used to highlight active nav 
 $company_name = get_setting('company_name');
 // Short brand for navbar to prevent overflow with long company name
 $nav_brand = 'MM Consultancy Solutions';
+
+send_security_headers();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <title><?php echo isset($page_title) ? escape($page_title) . " | " . escape($company_name) : escape($company_name); ?></title>
     
     <!-- Meta SEO — override $page_desc in each page for custom descriptions -->

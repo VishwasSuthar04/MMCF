@@ -189,6 +189,31 @@ function validate_password_strength($password, $username = '') {
 }
 
 // ---------------------------------------------------------------
+//  send_security_headers()
+//  Emit security headers as real HTTP response headers.
+//
+//  X-Frame-Options and X-Content-Type-Options were previously only
+//  <meta http-equiv> tags, which browsers do not honour — so the
+//  protection they appeared to provide never actually applied. Real
+//  response headers are what these features require.
+//
+//  Call before any output. Safe to call more than once: header()
+//  replaces a previous value of the same name rather than adding one.
+// ---------------------------------------------------------------
+function send_security_headers() {
+    if (headers_sent()) {
+        return;
+    }
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    // frame-ancestors is the modern equivalent of X-Frame-Options and is
+    // honoured even where X-Frame-Options is not. No other CSP directives
+    // are set, because these pages rely on inline styles and scripts.
+    header("Content-Security-Policy: frame-ancestors 'self'");
+}
+
+// ---------------------------------------------------------------
 //  upload_file()
 //  Securely upload an image or PDF to the /uploads/ folder.
 //

@@ -230,17 +230,25 @@ Implemented:
 - **Error handling** — production shows generic messages; details go to
   `error_log` only
 - **Logs** — `admin/logs/.htaccess` denies web access to the failed-login log
+- **Response headers** — `send_security_headers()` in `includes/functions.php`
+  sets `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and a
+  `frame-ancestors` CSP on every public page, admin page, the login screen, and
+  the quote print view
+
+The headers were previously emitted only as `<meta http-equiv>` tags. Browsers
+ignore `X-Frame-Options` and `X-Content-Type-Options` in that form, so the
+clickjacking and MIME-sniffing protection they appeared to provide was not in
+effect. They are now real response headers.
 
 Known gaps, stated plainly rather than claimed as features:
 
-- `X-Content-Type-Options` and `X-Frame-Options` are emitted as
-  `<meta http-equiv>` tags. Browsers largely ignore `X-Frame-Options` in meta
-  form — clickjacking protection needs a real response header or a CSP
-  `frame-ancestors` directive.
-- `Referrer-Policy` is specified in the requirements docs but is **not**
-  implemented in code.
+- Only `frame-ancestors` is set in the CSP. A full `Content-Security-Policy`
+  would need `script-src`/`style-src` with nonces or hashes, because the pages
+  currently rely on inline styles and scripts.
 - The seeded testimonials are placeholder names (`John Doe`, `Sarah Jenkins`)
   and should be replaced before launch.
+- The seeded admin account is not created by `schema.sql` at all, by design —
+  see [Creating the admin account](#creating-the-admin-account).
 
 ## Operations
 
